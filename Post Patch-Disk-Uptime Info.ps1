@@ -13,7 +13,7 @@ function InstallPSWindowsUpdatePSModule () {
 function InstallSqlServerPSModule () {
     Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser -Force -ErrorAction SilentlyContinue
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    Install-Module SqlServer -Force -AllowClobber | Out-Null
+    Install-Module SqlServer -Scope CurrentUser -Force -AllowClobber | Out-Null
     Import-Module SqlServer -Force | Out-Null
     if(!(Get-Module -Name "SqlServer")){
         Write-MSPLog -LogSource "MSP Monitoring" -LogType "Warning" -LogMessage "The module SqlServer failed to install..."
@@ -169,9 +169,9 @@ function GetSystemUptimeData () {
 function ForceRebootSchedTaskCheck () {
     $EndpointOS = (Get-WmiObject -class Win32_OperatingSystem).Caption
     if((Get-WindowsOptionalFeature -Online | Where-Object {$_.FeatureName -eq "Microsoft-Hyper-V"} | Where-Object {$_.State -eq "Enabled"}) -and ($EndpointOS | Select-String "Server")){
-        if(Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object {$_.TaskName -Like "(ComSys)(HyperV) Weekly Forced Reboot*"}){
+        if(Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object {$_.TaskName -Like "*(HyperV) Weekly Forced Reboot*"}){
             $Script:EndpointForceRebootSchedTaskExists = "True"
-            $Script:EndpointForceRebootSchedTaskName = (Get-ScheduledTask | Where-Object {$_.TaskName -Like "(ComSys)(HyperV) Weekly Forced Reboot*"}).TaskName
+            $Script:EndpointForceRebootSchedTaskName = (Get-ScheduledTask | Where-Object {$_.TaskName -Like "*(HyperV) Weekly Forced Reboot*"}).TaskName
         }
         else{
             $Script:EndpointForceRebootSchedTaskExists = "False"
@@ -179,9 +179,9 @@ function ForceRebootSchedTaskCheck () {
         }
     }
     else{
-        if(Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object {$_.TaskName -Like "(ComSys) Weekly Forced Reboot*"}){
+        if(Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object {$_.TaskName -Like "*Weekly Forced Reboot*"}){
             $Script:EndpointForceRebootSchedTaskExists = "True"
-            $Script:EndpointForceRebootSchedTaskName = (Get-ScheduledTask | Where-Object {$_.TaskName -Like "(ComSys) Weekly Forced Reboot*"}).TaskName
+            $Script:EndpointForceRebootSchedTaskName = (Get-ScheduledTask | Where-Object {$_.TaskName -Like "*Weekly Forced Reboot*"}).TaskName
         }
         else{
             $Script:EndpointForceRebootSchedTaskExists = "False"
