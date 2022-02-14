@@ -231,12 +231,12 @@ function PostSystemUptimeInfo {
     }
 
     $DateTime = Get-Date -Format "MM/dd/yyyy HH:mm"
-    Write-MSPLog -LogSource "MSP Monitoring" -LogType "Information" -LogMessage "Posting system uptime information:`r`n`r`nSerial number: $Script:EndpointSerial`r`nComputer name: $Script:EndpointComputerName`r`nOS: $Script:EndpointOS $Script:Win10Build`r`nType: $Script:EndpointType`r`nSitename: $Script:EndpointSiteName`r`nEndpoint Uptime: $Script:EndpointUptime`r`nPending Reboot State: $Script:EndpointPendingRebootState`r`nForce Reboot Schedulec Task Exists: $Script:EndpointForceRebootSchedTaskExists`r`nForce Reboot Scheduled Task Name: $Script:EndpointForceRebootSchedTaskName`r`nPRC Scheduled Task Exists: $Script:EndpointPRCSchedTaskExists"
+    Write-MSPLog -LogSource "MSP Monitoring" -LogType "Information" -LogMessage "Posting system uptime information:`r`n`r`nSerial number: $Script:EndpointSerial`r`nComputer name: $Script:EndpointComputerName`r`nOS: $Script:EndpointOS $Script:Win10Build`r`nType: $Script:EndpointType`r`nSitename: $Script:EndpointSiteName`r`nEndpoint Uptime: $Script:EndpointUptime days`r`nPending Reboot State: $Script:EndpointPendingRebootState`r`nForce Reboot Schedulec Task Exists: $Script:EndpointForceRebootSchedTaskExists`r`nForce Reboot Scheduled Task Name: $Script:EndpointForceRebootSchedTaskName`r`nPRC Scheduled Task Exists: $Script:EndpointPRCSchedTaskExists"
 
 $SQLCommand = @"
 if exists(SELECT * from Table_CustomerSystemUptimeData where EndpointSerial='$Script:EndpointSerial')
 BEGIN            
-UPDATE Table_CustomerSystemUptimeData SET EndpointComputerName='$Script:EndpointComputerName',EndpointOS='$Script:EndpointOS',EndpointType='$Script:EndpointType',EndpointSiteName='$Script:EndpointSiteName',EndpointSystemUptime='$Script:EndpointUptime',EndpointPendingRebootState='$Script:EndpointPendingRebootState',EndpointForceRebootSchedTaskExists='$Script:ndpointForceRebootSchedTaskExists',EndpointForceRebootSchedTaskName='$Script:EndpointForceRebootSchedTaskName',EndpointPRCSchedTaskExists='$Script:EndpointPRCSchedTaskExists',LastPostDate='$DateTime' WHERE (EndpointSerial = '$Script:EndpointSerial')
+UPDATE Table_CustomerSystemUptimeData SET EndpointComputerName='$Script:EndpointComputerName',EndpointOS='$Script:EndpointOS',EndpointType='$Script:EndpointType',EndpointSiteName='$Script:EndpointSiteName',EndpointSystemUptime='$Script:EndpointUptime',EndpointPendingRebootState='$Script:EndpointPendingRebootState',EndpointForceRebootSchedTaskExists='$Script:EndpointForceRebootSchedTaskExists',EndpointForceRebootSchedTaskName='$Script:EndpointForceRebootSchedTaskName',EndpointPRCSchedTaskExists='$Script:EndpointPRCSchedTaskExists',LastPostDate='$DateTime' WHERE (EndpointSerial = '$Script:EndpointSerial')
 END                  
 else            
 BEGIN
